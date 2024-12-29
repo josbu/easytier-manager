@@ -604,6 +604,7 @@ export default {
     listener4: '监听4',
     view_log: '查看日志',
     dev_name: 'TUN网卡名称',
+    compression_algorithm: '压缩算法',
     multi_thread: '使用多线程',
     disable_p2p: '禁用P2P通信',
     disable_udp_hole_punching: '禁用UDP打洞',
@@ -672,6 +673,8 @@ export default {
     portRestricted: 'Nat3端口受限',
     symmetric: 'Nat4对称',
     unknown: '未知',
+    openInternet: '开放互联网',
+    noPAT: '公网NoPAT',
     openDirError: '打开目录失败',
     extractError: '解压失败',
     extractSuccess: '解压成功',
@@ -679,6 +682,8 @@ export default {
     restoreWinState: '恢复窗口状态',
     otherSetting: '其他设置',
     clearCache: '清除缓存',
-    feedback: '问题及意见反馈'
+    feedback: '问题及意见反馈',
+    vpn_wireguard_listen: 'WireGuard监听地址',
+    vpn_client_cidr: 'WireGuard客户端CIDR'
   }
 }

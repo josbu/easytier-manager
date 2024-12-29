@@ -18,6 +18,10 @@ const defaultFormData: FormData | any = {
     file: 'easytier',
     dir: ''
   },
+  vpn_portal_config: {
+    client_cidr: '',
+    wireguard_listen: ''
+  },
   flags: {
     default_protocol: 'tcp',
     dev_name: '',
@@ -34,7 +38,8 @@ const defaultFormData: FormData | any = {
     manual_routes: undefined,
     ipv6_listener: undefined,
     socks5: undefined,
-    relay_network_whitelist: '*'
+    relay_network_whitelist: '*',
+    compression_algorithm: undefined
   }
 }
 export default { defaultFormData }

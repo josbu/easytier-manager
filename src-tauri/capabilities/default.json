@@ -25,6 +25,7 @@
     "core:webview:allow-webview-show",
     "core:webview:allow-webview-hide",
     "core:webview:allow-webview-close",
+    "core:window:allow-set-skip-taskbar",
     "window-state:default",
     "window-state:allow-save-window-state",
     "window-state:allow-restore-state",
@@ -195,7 +196,7 @@
           "url": "https://github.com/*"
         },
         {
-          "url": "https://ghp.ci/*"
+          "url": "https://ghgo.xyz/*"
         },
         {
           "url": "https://ghproxy.net/*"
@@ -204,13 +205,10 @@
           "url": "https://ghproxy.cn/*"
         },
         {
-          "url": "https://dgithub.xyz/*"
+          "url": "https://gh.ddlc.top/*"
         },
         {
           "url": "https://gh-proxy.com/*"
-        },
-        {
-          "url": "https://gh.xiu2.us.kg/*"
         },
         {
           "url": "https://ghproxy.cc/*"
@@ -222,7 +220,7 @@
           "url": "https://github.site/*"
         },
         {
-          "url": "https://cors.isteed.cc/*"
+          "url": "https://github.boki.moe/*"
         },
         {
           "url": "http://*.cheng.us.kg/*"

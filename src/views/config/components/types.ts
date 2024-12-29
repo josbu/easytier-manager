@@ -24,6 +24,7 @@ interface FileLogger {
 interface Flags {
   default_protocol: string
   dev_name: string
+  data_compress_algo: string
   disable_encryption: boolean
   disable_ipv6: boolean
   latency_first: boolean
@@ -53,5 +54,6 @@ interface FormData {
   rpc_portal: string
   console_logger: Partial<ConsoleLogger> | any
   file_logger: Partial<FileLogger>
+  vpn_portal_config: Partial<VpnPortalConfig> | any
   flags: Partial<Flags>
 }

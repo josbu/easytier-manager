@@ -18,9 +18,9 @@ const currentSize = computed(() => appStore.getCurrentSize)
 const greyMode = computed(() => appStore.getGreyMode)
 const trayStore = useTrayStore()
 const easytierStore = useEasyTierStore()
-appStore.initTheme()
 
 onBeforeMount(async () => {
+  appStore.initTheme()
   trayStore.initTray()
   restoreStateCurrent(StateFlags.ALL)
   checkDir()

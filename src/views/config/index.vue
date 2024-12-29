@@ -79,6 +79,8 @@ const serviceStatusDict = (status: string | boolean) => {
       return '停止'
     case 'SERVICE_RUNNING':
       return '运行中'
+    case 'SERVICE_STOP_PENDING':
+      return '停止中'
     case 'uninstalled':
       return '未安装'
     default:
@@ -453,6 +455,12 @@ const startServiceHandle = async (row: any) => {
     .finally(async () => await getConfigList())
 }
 const stopServiceHandle = async (row: any) => {
+  ElNotification({
+    title: t('common.reminder'),
+    message: '开始停止服务，请稍后(可能需要等待3-20秒)，如果显示停止中，再点击停止按钮',
+    type: 'warning',
+    duration: 10000
+  })
   stopServiceOnWindows(prefixSvc + row.configFileName)
     .then((res: any) => {
       if (res) {
@@ -509,7 +517,7 @@ onMounted(async () => {
         命令，建议安装服务，使用配置页面的服务启动停止组网，工作台的状态可能不准，或者忽略工作台的状态显示，只要表格有数据更新出来就是运行成功。<br
       /></el-text>
       <el-text v-if="easyTierStore.os === 'windows'" type="info" effect="dark"
-        >如果组网是由服务启动的，则只能使用启动服务和停止服务，无法使用首页的启动和停止
+        >安装服务前检查程序尽量不要放在含有空格、中文路径的目录下；如果组网是由服务启动的，则只能使用启动服务和停止服务，无法使用首页的启动和停止
       </el-text>
       <el-table
         :data="easyTierStore.configList"

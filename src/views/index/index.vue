@@ -151,6 +151,10 @@ const getNatType = (natType: string) => {
       return t('easytier.symmetric')
     case 'Unknown':
       return t('easytier.unknown')
+    case 'OpenInternet':
+      return t('easytier.openInternet')
+    case 'NoPAT':
+      return t('easytier.noPAT')
     default:
       return natType
   }
@@ -160,7 +164,6 @@ const getNodeInfo = async () => {
   const maxRetry = 10
   let retryTime = 1
   while (true) {
-    // todo 可配置retryTime
     if (easyTierStore.stopLoop || retryTime > maxRetry) {
       break
     }

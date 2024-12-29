@@ -18,6 +18,7 @@ import { attachConsole, error, info } from '@tauri-apps/plugin-log'
 import { open } from '@tauri-apps/plugin-shell'
 import { ElNotification } from 'element-plus'
 import { unzipSync } from 'fflate'
+import pkg from '../../package.json'
 
 // 启用 TargetKind::Webview 后，这个函数将把日志打印到浏览器控制台
 attachConsole()
@@ -43,6 +44,14 @@ export const checkDir = async (dirPath: string = RESOURCE_PATH) => {
   }
 }
 
+// 检测文件是否存在，不存在则创建空文件
+export const fileExist = async (filePath: string) => {
+  const exist = await exists(filePath, { baseDir: BaseDirectory.Resource })
+  if (!exist) {
+    await writeFileContent(filePath, '', { baseDir: BaseDirectory.Resource })
+  }
+  return exist
+}
 // 获取resource目录，如果resource目录不存在，则调用checkResourceDir创建，最终返回带'resource'后缀的目录
 export const getResourceDir = async () => {
   await checkDir()
@@ -234,9 +243,14 @@ export async function downloadFile(fileUrl: string): Promise<boolean> {
       method: 'GET',
       headers: {
         'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.6261.95 Safari/537.36'
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.6261.95 Safari/537.36',
+        Accept: '*/*',
+        'Cache-Control': 'no-cache',
+        'Upgrade-Insecure-Requests': '1'
       },
-      connectTimeout: 30000
+      // 增加超时时间
+      connectTimeout: 30000,
+      maxRedirections: 2
       // responseType: ResponseType.Binary,
       // 添加下载进度监听
       // onDownloadProgress: (progress) => {
@@ -406,4 +420,11 @@ async function findCommonPrefix(paths: string[]): Promise<string> {
   }
 
   return prefix.length > 0 ? `${prefix.join('/')}/` : ''
+}
+
+// 清空程序logs目录下 pkg name 的日志文件，以免日志文件过大
+export const clearLogs = async () => {
+  const logsFile = await join('logs', pkg.name + '.log')
+  // 清空 logsFile 的内容
+  await writeFileContent(logsFile, '', { baseDir: BaseDirectory.Resource })
 }

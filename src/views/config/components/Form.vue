@@ -187,6 +187,32 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :md="12" :sm="12" :xs="12">
+          <el-tooltip content="WireGuard客户端CIDR，例如：10.14.14.0/24" placement="top">
+            <el-form-item
+              :label="t('easytier.vpn_client_cidr')"
+              prop="vpn_portal_config.client_cidr"
+            >
+              <el-input v-model="formData.vpn_portal_config.client_cidr" type="text" clearable />
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+        <el-col :md="12" :sm="12" :xs="12">
+          <el-tooltip content="WireGuard监听地址，例如：0.0.0.0:11010" placement="top">
+            <el-form-item
+              :label="t('easytier.vpn_wireguard_listen')"
+              prop="vpn_portal_config.wireguard_listen"
+            >
+              <el-input
+                v-model="formData.vpn_portal_config.wireguard_listen"
+                type="text"
+                clearable
+              />
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+      </el-row>
       <el-divider direction="horizontal">日志设置</el-divider>
       <el-row>
         <el-col :span="12">
@@ -230,16 +256,31 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.dev_name')" prop="flags.dev_name">
-            <el-input
-              v-model="formData.flags.dev_name"
-              type="text"
-              maxlength="16"
-              show-word-limit
-              clearable
-            />
+          <el-form-item
+            :label="t('easytier.compression_algorithm')"
+            prop="flags.data_compress_algo"
+          >
+            <el-select v-model="formData.flags.data_compress_algo" clearable>
+              <el-option
+                v-for="(item, index) in compressionAlgorithmOptions"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :span="24">
+        <el-form-item :label="t('easytier.dev_name')" prop="flags.dev_name">
+          <el-input
+            v-model="formData.flags.dev_name"
+            type="text"
+            maxlength="24"
+            show-word-limit
+            clearable
+          />
+        </el-form-item>
       </el-row>
       <el-row>
         <el-col :span="12">
@@ -267,29 +308,40 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.no_tun')" prop="flags.no_tun">
-            <el-switch v-model="formData.flags.no_tun" />
-          </el-form-item>
+          <el-tooltip content="no-tun,不创建TUN设备，可以使用子网代理访问节点" placement="top">
+            <el-form-item :label="t('easytier.no_tun')" prop="flags.no_tun">
+              <el-switch v-model="formData.flags.no_tun" />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.use_smoltcp')" prop="flags.use_smoltcp">
-            <el-switch v-model="formData.flags.use_smoltcp" />
-          </el-form-item>
+          <el-tooltip content="use-smoltcp,为子网代理启用smoltcp堆栈" placement="top">
+            <el-form-item :label="t('easytier.use_smoltcp')" prop="flags.use_smoltcp">
+              <el-switch v-model="formData.flags.use_smoltcp" />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.disable_p2p')" prop="flags.disable_p2p">
-            <el-switch v-model="formData.flags.disable_p2p" />
-          </el-form-item>
+          <el-tooltip
+            content="disable-p2p,禁用P2P通信，只通过--peers指定的节点转发数据包"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.disable_p2p')" prop="flags.disable_p2p">
+              <el-switch v-model="formData.flags.disable_p2p" />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
         <el-col :span="12">
-          <el-form-item
-            :label="t('easytier.disable_udp_hole_punching')"
-            prop="flags.disable_udp_hole_punching"
-          >
-            <el-switch v-model="formData.flags.disable_udp_hole_punching" />
-          </el-form-item>
+          <el-tooltip content="disable-udp-hole-punching,禁用UDP打洞功能" placement="top">
+            <el-form-item
+              :label="t('easytier.disable_udp_hole_punching')"
+              prop="flags.disable_udp_hole_punching"
+            >
+              <el-switch v-model="formData.flags.disable_udp_hole_punching" />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
@@ -299,6 +351,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-tooltip
+            content="relay-all-peer-rpc,转发所有对等节点的RPC数据包，即使对等节点不在转发网络白名单中。这可以帮助白名单外网络中的对等节点建立P2P连接"
+            placement="top"
+          />
           <el-form-item :label="t('easytier.relay_all_peer_rpc')" prop="flags.relay_all_peer_rpc">
             <el-switch v-model="formData.flags.relay_all_peer_rpc" />
           </el-form-item>
@@ -324,21 +380,36 @@
       <el-divider direction="horizontal">以下尚未测试，建议使用编辑器添加(修改)</el-divider>
       <el-row>
         <el-col :md="24" :sm="12" :xs="12">
-          <el-form-item :label="t('easytier.manual_routes')" prop="flags.manual_routes">
-            <el-input v-model="formData.flags.manual_routes" type="text" clearable />
-          </el-form-item>
+          <el-tooltip
+            content="manual-routes,手动分配路由CIDR，将禁用子网代理和从对等节点传播的wireguard路由。例如：192.168.0.0/16"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.manual_routes')" prop="flags.manual_routes">
+              <el-input v-model="formData.flags.manual_routes" type="text" clearable />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.ipv6_listener')" prop="flags.ipv6_listener">
-            <el-input v-model="formData.flags.ipv6_listener" type="text" clearable />
-          </el-form-item>
+          <el-tooltip
+            content="ipv6-listener,IPv6 监听器的URL，例如：tcp://[::]:11010，如果未设置，将在随机UDP端口上监听"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.ipv6_listener')" prop="flags.ipv6_listener">
+              <el-input v-model="formData.flags.ipv6_listener" type="text" clearable />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.socks5')" prop="flags.socks5">
-            <el-input v-model="formData.flags.socks5" type="text" clearable />
-          </el-form-item>
+          <el-tooltip
+            content="socks5,启用 socks5 服务器，允许 socks5 客户端访问虚拟网络. 格式: <端口>，例如：1080，例如：socks5://0.0.0.0:1080"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.socks5')" prop="flags.socks5">
+              <el-input v-model="formData.flags.socks5" type="text" clearable />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
       </el-row>
     </el-form>
@@ -349,8 +420,6 @@ import { onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { getLogsDir } from '@/utils/fileUtil'
 import { getHostname } from '@/utils/sysUtil'
-import { fetch } from '@tauri-apps/plugin-http'
-import { MONITOR_LIST } from '@/constants/easytier'
 import { useEasyTierStore } from '@/store/modules/easytier'
 
 const { t } = useI18n()
@@ -422,12 +491,12 @@ const peersOptions = ref([
     description: 'tcp://ah.nkbpal.cn:11010'
   },
   {
-    name: 'tcp://s1.ct8.pl:11010',
-    description: 'tcp://s1.ct8.pl:11010'
-  },
-  {
     name: 'tcp://et.ie12vps.xyz:11010',
     description: 'tcp://et.ie12vps.xyz:11010'
+  },
+  {
+    name: 'tcp://gz.minebg.top:11010',
+    description: 'tcp://gz.minebg.top:11010'
   }
 ])
 const listenersOptions = reactive([
@@ -508,10 +577,18 @@ const flags_default_protocolOptions = reactive([
     value: 'udp'
   }
 ])
+const compressionAlgorithmOptions = reactive([
+  {
+    label: 'none',
+    value: 'none'
+  },
+  {
+    label: 'zstd',
+    value: '2'
+  }
+])
 const getPublicPeers = async () => {
   const data = await easyTierStore.getPublicPeerList()
-  console.log('data', data)
-
   if (data) {
     peersOptions.value = data
   }

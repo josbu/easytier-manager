@@ -1,9 +1,9 @@
-import { CONFIG_PATH, NSSM_NAME } from '@/constants/easytier'
+import { CONFIG_PATH, LOG_PATH, NSSM_NAME, RESOURCE_PATH } from '@/constants/easytier'
 import { invoke } from '@tauri-apps/api/core'
 import { join, resourceDir } from '@tauri-apps/api/path'
 import { attachConsole, error, info } from '@tauri-apps/plugin-log'
 import { Command, type SpawnOptions } from '@tauri-apps/plugin-shell'
-import { getCliDir, getCoreDir, getResourceDir } from './fileUtil'
+import { getCliDir, getCoreDir, getResourceDir, fileExist, getLogsDir } from './fileUtil'
 import { getPlatform, sleep } from './sysUtil'
 
 // 启用 TargetKind::Webview 后，这个函数将把日志打印到浏览器控制台
@@ -377,6 +377,7 @@ export const installServiceOnWindows = async (serviceName: string, args: string)
   return new Promise(async (resolve, reject) => {
     const appDirectory = await getResourceDir()
     const corePath = await join(appDirectory, 'easytier-core')
+    // const logsPath = await getLogsDir()
     try {
       // 服务是否存在
       const exist: any = await checkServiceOnWindows(serviceName)
@@ -385,15 +386,21 @@ export const installServiceOnWindows = async (serviceName: string, args: string)
         resolve(true)
         return
       }
-      const args1 = ['install', serviceName, corePath]
-      const args2 = ['set', serviceName, 'AppParameters', `-c ${args}`]
-      const args3 = ['set', serviceName, 'AppDirectory', appDirectory]
+      // 检测文件是否存在
+      // await fileExist(await join(LOG_PATH, 'service.log'))
+      const args1 = ['install', serviceName, `${corePath}`]
+      const args2 = ['set', serviceName, 'AppParameters', `-c "${args}"`]
+      const args3 = ['set', serviceName, 'AppDirectory', `${appDirectory}`]
       const args4 = ['set', serviceName, 'AppExit', 'Default', 'Restart']
       const args5 = ['set', serviceName, 'Description', `EasyTier 组网,服务配置:${serviceName}`]
       const args6 = ['set', serviceName, 'DisplayName', `EasyTier 组网 ${serviceName}`]
       const args7 = ['set', serviceName, 'ObjectName', 'LocalSystem']
       const args8 = ['set', serviceName, 'Start', 'SERVICE_AUTO_START']
       const args9 = ['set', serviceName, 'Type', 'SERVICE_WIN32_OWN_PROCESS']
+      // 重定向日志到文件
+      // const args10 = ['set', serviceName, 'AppStdout', `${logsPath}\\service.log`]
+      // const args11 = ['set', serviceName, 'AppStderr', `${logsPath}\\service.log`]
+      // const args12 = ['set', serviceName, 'AppTimestampLog', '1']
       await executeCmd(NSSM_NAME, args1, { encoding: 'gbk' }).then(async (res) => {
         info('安装服务结果:' + JSON.stringify(res))
         if (
@@ -411,6 +418,9 @@ export const installServiceOnWindows = async (serviceName: string, args: string)
           await executeCmd(NSSM_NAME, args7, { encoding: 'gbk' })
           await executeCmd(NSSM_NAME, args8, { encoding: 'gbk' })
           await executeCmd(NSSM_NAME, args9, { encoding: 'gbk' })
+          // await executeCmd(NSSM_NAME, args10, { encoding: 'gbk' })
+          // await executeCmd(NSSM_NAME, args11, { encoding: 'gbk' })
+          // await executeCmd(NSSM_NAME, args12, { encoding: 'gbk' })
           resolve(true)
           return
         }
@@ -457,6 +467,10 @@ export const startServiceOnWindows = (serviceName: string) => {
       await sleep(2000)
       const res = await checkServiceOnWindows(serviceName)
       info('启动服务:' + JSON.stringify(res))
+      if (JSON.stringify(res).includes('SERVICE_STOPPED')) {
+        resolve(false)
+        return
+      }
       if (res && (res.code! === 0 || res.includes('SERVICE'))) {
         resolve(true)
       } else {
@@ -481,6 +495,18 @@ export const stopServiceOnWindows = (serviceName: string) => {
       await sleep(1500)
       const res = await checkServiceOnWindows(serviceName)
       info('停止服务:' + JSON.stringify(res))
+      if (JSON.stringify(res).includes('SERVICE_STOP_PENDING')) {
+        // nssm processes easytier-Legion2222
+        const processInfo = await executeCmd(NSSM_NAME, ['processes', serviceName], {
+          encoding: 'gbk'
+        })
+        const processList = processInfo.split(' ')
+        if (processList.length > 0) {
+          await killProcess(parseInt(processList[0]))
+          resolve(true)
+          return
+        }
+      }
       if (res && (res.code! === 0 || res.includes('SERVICE'))) {
         resolve(true)
       } else {

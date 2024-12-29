@@ -40,11 +40,11 @@ const form = reactive({
   appLogLevel: ''
 })
 
-const verSelect = ref<string>('v2.0.3')
+const verSelect = ref<string>('v2.1.1')
 const verOptions = ref([
   {
-    name: 'v2.1.0',
-    tag_name: 'v2.1.0'
+    name: 'v2.1.1',
+    tag_name: 'v2.1.1'
   },
   {
     name: 'v2.2.0',
@@ -203,14 +203,22 @@ const checkUpdate = async () => {
     type: 'info',
     duration: 2000
   })
-  const response = await fetch(PROXY_URL + MANAGER_INFO_API, {
-    method: 'GET',
-    headers: { 'User-Agent': USER_AGENT },
-    connectTimeout: 30000
-  })
-  const data = await response.json()
-  console.log('tagName', data[0].tag_name)
-  console.log('appVersion', 'v' + form.appVersion)
+  let data, response
+  try {
+    response = await fetch(PROXY_URL + MANAGER_INFO_API, {
+      method: 'GET',
+      headers: { 'User-Agent': USER_AGENT },
+      connectTimeout: 30000
+    })
+    data = await response.json()
+  } catch {
+    response = await fetch(MANAGER_INFO_API, {
+      method: 'GET',
+      headers: { 'User-Agent': USER_AGENT },
+      connectTimeout: 30000
+    })
+    data = await response.json()
+  }
   if (data && data.length > 0 && data[0].tag_name !== 'v' + form.appVersion) {
     ElMessageBox.confirm('是否去官网下载更新？', t('common.reminder'), {
       confirmButtonText: t('common.delOk'),
@@ -307,7 +315,7 @@ onMounted(async () => {
               {{ t('easytier.downLoadCore') }}
             </div>
           </template>
-          1.选择版本时可以手动输入，对应官方内核仓库的版本，例如：v2.1.0<br />
+          1.选择版本时可以手动输入，对应官方内核仓库的版本，例如：v2.1.1<br />
           2.Github加速链接为空默认随机加速链接，下载视网络情况而定，一般30秒以内<br />
           3.下载完后点击安装，安装成功后检测内核是否存在<br />
           版本
@@ -407,10 +415,14 @@ onMounted(async () => {
               {{ t('easytier.otherSetting') }}
             </div>
           </template>
-          <el-button type="info" @click="restoreWinState"
-            >{{ t('easytier.restoreWinState') }}
-          </el-button>
-          <el-button type="danger" @click="clearCache">{{ t('easytier.clearCache') }}</el-button>
+          <el-tooltip content="恢复窗口长宽大小" placement="top">
+            <el-button type="info" @click="restoreWinState"
+              >{{ t('easytier.restoreWinState') }}
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="遇事不决，清除缓存" placement="top">
+            <el-button type="danger" @click="clearCache">{{ t('easytier.clearCache') }}</el-button>
+          </el-tooltip>
           <el-button
             type="primary"
             @click="openPath('https://github.com/xlc520/easytier-manager/issues')"

@@ -35,9 +35,12 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 import './permission'
+import { clearLogs } from './utils/fileUtil'
 
 // 创建实例
 const setupAll = async () => {
+  await clearLogs()
+
   const app = createApp(App)
 
   await setupI18n(app)

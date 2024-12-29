@@ -25,28 +25,24 @@ export const EASYTIER_NAME = '/easytier-<%= osType %>-<%= osArch %>-<%= version 
 
 export const GITHUB_MIRROR_URL = [
   {
-    value: 'https://ghp.ci/',
-    label: 'https://ghp.ci/'
+    value: 'https://gh-proxy.com/',
+    label: 'https://gh-proxy.com/'
   },
   {
     value: 'https://ghproxy.cn/',
     label: 'https://ghproxy.cn/'
   },
   {
+    value: 'https://ghgo.xyz/',
+    label: 'https://ghgo.xyz/'
+  },
+  {
     value: 'https://ghproxy.net/',
     label: 'https://ghproxy.net/'
   },
   {
-    value: 'https://gh-proxy.com/',
-    label: 'https://gh-proxy.com/'
-  },
-  {
-    value: 'https://dgithub.xyz/',
-    label: 'https://dgithub.xyz/'
-  },
-  {
-    value: 'https://gh.xiu2.us.kg/',
-    label: 'https://gh.xiu2.us.kg/'
+    value: 'https://gh.ddlc.top/',
+    label: 'https://gh.ddlc.top/'
   },
   {
     value: 'https://ghproxy.cc/',
@@ -61,7 +57,7 @@ export const GITHUB_MIRROR_URL = [
     label: 'https://github.site/'
   },
   {
-    value: 'https://cors.isteed.cc/',
-    label: 'https://cors.isteed.cc/'
+    value: 'https://github.boki.moe/',
+    label: 'https://github.boki.moe/'
   }
 ]

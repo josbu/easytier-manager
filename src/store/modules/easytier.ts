@@ -112,13 +112,33 @@ export const useEasyTierStore = defineStore(
       const localRes = JSON.parse(localStorage.getItem('releaseInfo') || '[]')
       const isGet = JSON.parse(localStorage.getItem('releaseInfoIsGet') || defaultStatus)
       const date = dayjs().format('YYYYMMDD').toString()
+
       if ((isGet.data !== date && isGet.status === 'false') || releaseInfo.value.length === 0) {
-        const response = await fetch(PROXY_URL + CORE_INFO_API, {
-          method: 'GET',
-          headers: { 'User-Agent': USER_AGENT },
-          connectTimeout: 30000
-        })
-        releaseInfo.value = await response.json()
+        try {
+          // 首先尝试使用 PROXY_URL
+          const response = await fetch(PROXY_URL + CORE_INFO_API, {
+            method: 'GET',
+            headers: { 'User-Agent': USER_AGENT },
+            connectTimeout: 30000
+          })
+          releaseInfo.value = await response.json()
+        } catch (error) {
+          // 如果使用 PROXY_URL 失败，直接尝试原始 URL
+          try {
+            const response = await fetch(CORE_INFO_API, {
+              method: 'GET',
+              headers: { 'User-Agent': USER_AGENT },
+              connectTimeout: 30000
+            })
+            releaseInfo.value = await response.json()
+          } catch (error) {
+            console.error('获取发布信息失败:', error)
+            releaseInfo.value = localRes
+            return releaseInfo.value
+          }
+        }
+
+        // 如果成功获取到新数据，更新本地存储
         localStorage.setItem('releaseInfo', JSON.stringify(releaseInfo.value))
         localStorage.setItem(
           'releaseInfoIsGet',
@@ -127,8 +147,10 @@ export const useEasyTierStore = defineStore(
             date
           })
         )
+      } else {
+        releaseInfo.value = localRes
       }
-      releaseInfo.value = localRes
+
       return releaseInfo.value
     }
     const getPublicPeerList = async () => {
@@ -136,12 +158,22 @@ export const useEasyTierStore = defineStore(
       const isGet = JSON.parse(localStorage.getItem('publicPeerListIsGet') || defaultStatus)
       const date = dayjs().format('YYYYMMDD').toString()
       if ((isGet.data !== date && isGet.status === 'false') || publicPeerList.value.length === 0) {
-        const response = await fetch(MONITOR_LIST, {
-          method: 'GET',
-          headers: { 'User-Agent': USER_AGENT },
-          connectTimeout: 30000
-        })
-        const res = await response.json()
+        let res, response
+        try {
+          response = await fetch(MONITOR_LIST, {
+            method: 'GET',
+            headers: { 'User-Agent': USER_AGENT },
+            connectTimeout: 30000
+          })
+          res = await response.json()
+        } catch {
+          response = await fetch(MONITOR_LIST, {
+            method: 'GET',
+            headers: { 'User-Agent': USER_AGENT },
+            connectTimeout: 30000
+          })
+          res = await response.json()
+        }
         if (res && res.code === 0) {
           publicPeerList.value = res.data.list
           localStorage.setItem('publicPeerList', JSON.stringify(publicPeerList.value))
