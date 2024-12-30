@@ -176,6 +176,12 @@ const addConfigAction = async () => {
       if (formData.value.console_logger?.level === undefined) {
         formData.value.console_logger = undefined
       }
+      if (
+        formData.value.vpn_portal_config.client_cidr === '' ||
+        formData.value.vpn_portal_config.wireguard_listen === ''
+      ) {
+        formData.value.vpn_portal_config = undefined
+      }
       await writeFileContent(
         CONFIG_PATH + '/' + configFileName.value + '.toml',
         toml.stringify(formData.value)
@@ -266,6 +272,12 @@ const saveConfigAction = async () => {
         if (!formData.value.console_logger || formData.value.console_logger?.level === undefined) {
           formData.value.console_logger = undefined
         }
+        if (
+          formData.value.vpn_portal_config.client_cidr === '' ||
+          formData.value.vpn_portal_config.wireguard_listen === ''
+        ) {
+          formData.value.vpn_portal_config = undefined
+        }
         await writeFileContent(
           CONFIG_PATH + '/' + configFileName.value + '.toml',
           toml.stringify(formData.value)
@@ -331,8 +343,10 @@ const delConfig = async (row?: any) => {
     type: 'warning'
   })
     .then(async () => {
-      // todo log.log('删除服务', row)
-      await uninstallServiceOnWindows(prefixSvc + row?.configFileName)
+      const serviceStatus = await checkServiceOnWindows(prefixSvc + row?.configFileName)
+      if (serviceStatus) {
+        await uninstallServiceOnWindows(prefixSvc + row?.configFileName)
+      }
       await deleteFileOrDir(CONFIG_PATH + '/' + row?.fileName)
       ElNotification({
         title: t('common.reminder'),

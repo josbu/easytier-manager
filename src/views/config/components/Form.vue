@@ -194,7 +194,7 @@
               :label="t('easytier.vpn_client_cidr')"
               prop="vpn_portal_config.client_cidr"
             >
-              <el-input v-model="formData.vpn_portal_config.client_cidr" type="text" clearable />
+              <el-input v-model="vpnPortalConfig.client_cidr" type="text" clearable />
             </el-form-item>
           </el-tooltip>
         </el-col>
@@ -204,11 +204,7 @@
               :label="t('easytier.vpn_wireguard_listen')"
               prop="vpn_portal_config.wireguard_listen"
             >
-              <el-input
-                v-model="formData.vpn_portal_config.wireguard_listen"
-                type="text"
-                clearable
-              />
+              <el-input v-model="vpnPortalConfig.wireguard_listen" type="text" clearable />
             </el-form-item>
           </el-tooltip>
         </el-col>
@@ -436,7 +432,7 @@ const ipv4Disabled = ref(false)
 const consoleLoggerVisible = ref(false)
 const peers = ref<Array<any>>([])
 const proxyNetwork = ref<Array<any>>([])
-
+const vpnPortalConfig = ref<any>({ client_cidr: '', wireguard_listen: '' })
 const rules = reactive({
   hostname: [
     { required: true, trigger: ['blur', 'change'], message: '请输入主机名' },
@@ -612,6 +608,22 @@ watch(
     }
   }
 )
+watch(
+  () => vpnPortalConfig.value.client_cidr,
+  (value) => {
+    if (value) {
+      formData.value.vpn_portal_config.client_cidr = vpnPortalConfig.value.client_cidr
+    }
+  }
+)
+watch(
+  () => vpnPortalConfig.value.wireguard_listen,
+  (value) => {
+    if (value) {
+      formData.value.vpn_portal_config.wireguard_listen = vpnPortalConfig.value.wireguard_listen
+    }
+  }
+)
 
 onMounted(async () => {
   if (formData.value.dhcp) {
@@ -632,6 +644,22 @@ onMounted(async () => {
   }
   if (!formData.value.file_logger.dir || formData.value.file_logger.dir === '') {
     formData.value.file_logger.dir = await getLogsDir()
+  }
+  if (
+    !formData.value.vpn_portal_config.client_cidr ||
+    formData.value.vpn_portal_config.client_cidr === ''
+  ) {
+    vpnPortalConfig.value.client_cidr = formData.value.vpn_portal_config.client_cidr
+  } else {
+    vpnPortalConfig.value.client_cidr = ''
+  }
+  if (
+    !formData.value.vpn_portal_config.wireguard_listen ||
+    formData.value.vpn_portal_config.wireguard_listen === ''
+  ) {
+    vpnPortalConfig.value.wireguard_listen = formData.value.vpn_portal_config.wireguard_listen
+  } else {
+    vpnPortalConfig.value.wireguard_listen = ''
   }
   await getPublicPeers()
 })
