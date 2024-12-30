@@ -576,11 +576,11 @@ const flags_default_protocolOptions = reactive([
 const compressionAlgorithmOptions = reactive([
   {
     label: 'none',
-    value: 'none'
+    value: undefined
   },
   {
     label: 'zstd',
-    value: '2'
+    value: 2
   }
 ])
 const getPublicPeers = async () => {
