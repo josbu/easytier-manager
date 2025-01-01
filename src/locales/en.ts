@@ -621,6 +621,7 @@ export default {
     disable_udp_hole_punching: 'disable udp hole punching',
     enable_encryption: 'enable encryption',
     disable_encryption: 'disable encryption',
+    enable_ipv6: 'enable IPv6',
     disable_ipv6: 'disable IPv6',
     latency_first: 'latency first',
     enable_exit_node: 'enable exit node',
@@ -686,6 +687,8 @@ export default {
     restoreWinState: 'Restore window state',
     otherSetting: 'Other setting',
     clearCache: 'Clear cache',
-    feedback: 'Feedback'
+    feedback: 'Feedback',
+    quickAction: 'Quick action',
+    createServerConfig: 'Create server config'
   }
 }

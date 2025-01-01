@@ -280,13 +280,13 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.disable_encryption')" prop="flags.disable_encryption">
-            <el-switch v-model="formData.flags.disable_encryption" />
+          <el-form-item :label="t('easytier.enable_encryption')" prop="flags.enable_encryption">
+            <el-switch v-model="formData.flags.enable_encryption" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.disable_ipv6')" prop="flags.disable_ipv6">
-            <el-switch v-model="formData.flags.disable_ipv6" />
+          <el-form-item :label="t('easytier.enable_ipv6')" prop="flags.enable_ipv6">
+            <el-switch v-model="formData.flags.enable_ipv6" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -297,8 +297,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.enable_exit_node')" prop="flags.enable_exit_node">
-            <el-switch v-model="formData.flags.enable_exit_node" />
+          <el-form-item :label="t('easytier.multi_thread')" prop="flags.multi_thread">
+            <el-switch v-model="formData.flags.multi_thread" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -342,8 +342,8 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.multi_thread')" prop="flags.multi_thread">
-            <el-switch v-model="formData.flags.multi_thread" />
+          <el-form-item :label="t('easytier.enable_exit_node')" prop="flags.enable_exit_node">
+            <el-switch v-model="formData.flags.enable_exit_node" />
           </el-form-item>
         </el-col>
         <el-col :span="12">

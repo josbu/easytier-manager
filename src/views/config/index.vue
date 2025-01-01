@@ -39,6 +39,7 @@ const pageSize = ref(10)
 const total = ref(0)
 const dataConfig = ref('')
 const dialogVisible = ref(false)
+// const quickDialogVisible = ref(false)
 const dialogTitle = ref('')
 const actionType = ref('')
 const editType = ref('')
@@ -130,6 +131,10 @@ const AddFormAction = async () => {
 const refreshAction = async () => {
   await getConfigList()
 }
+/* const quickAction = async () => {
+  dialogTitle.value = t('easytier.quickAction')
+  quickDialogVisible.value = true
+} */
 const checkConfigFileName = async () => {
   const findItem = easyTierStore.configList.find(
     (item) => item.configFileName === configFileName.value
@@ -155,7 +160,7 @@ const addConfigAction = async () => {
   }
   if (editType.value === 'form') {
     // 验证必填 formRef
-    if (!(await formRef.value.validateForm())) {
+    if (formRef.value && !(await formRef.value.validateForm())) {
       return
     }
     saveLoading.value = true
@@ -503,6 +508,27 @@ const stopServiceHandle = async (row: any) => {
     })
     .finally(async () => await getConfigList())
 }
+const createServerConfig = async () => {
+  formData.value = cloneDeep(DefaultData.defaultFormData)
+  const hostname = await getHostname()
+  configFileName.value = hostname + '_server'
+  if (await checkConfigFileName()) {
+    configFileName.value = hostname + '_server' + Math.floor(Math.random() * 100)
+  }
+  editType.value = 'form'
+  formData.value.network_identity.network_name = 'default'
+  formData.value.hostname = hostname + '_server'
+  formData.value.instance_name = hostname + '_server'
+  formData.value.listeners = [
+    'tcp://0.0.0.0:11010',
+    'udp://0.0.0.0:11010',
+    'wg://0.0.0.0:11011',
+    'ws://0.0.0.0:11011/',
+    'wss://0.0.0.0:11012/'
+  ]
+  await addConfigAction()
+  // quickDialogVisible.value = false
+}
 watch(configFileName, (value) => {
   formData.value.file_logger.file = value
 })
@@ -524,6 +550,10 @@ onMounted(async () => {
         <BaseButton type="primary" @click="AddFormAction"
           >{{ t('easytier.addNetConfigForm') }}
         </BaseButton>
+        <el-button type="info" @click="createServerConfig" style="margin-left: 10px">
+          {{ t('easytier.createServerConfig') }}
+        </el-button>
+        <!-- <BaseButton type="info" @click="quickAction">{{ t('easytier.quickAction') }}</BaseButton> -->
         <BaseButton type="success" @click="refreshAction">{{ t('common.refresh') }}</BaseButton>
       </div>
       <el-text v-if="noWMIC" type="warning" effect="dark"
@@ -682,6 +712,13 @@ onMounted(async () => {
         <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>
       </template>
     </Dialog>
+    <!-- <Dialog v-model="quickDialogVisible" :title="dialogTitle">
+      <div class="flex justify-center items-center">
+        <el-button type="primary" size="large" @click="createServerConfig">{{
+          t('easytier.createServerConfig')
+        }}</el-button>
+      </div>
+    </Dialog> -->
   </div>
 </template>
 <style lang="less">

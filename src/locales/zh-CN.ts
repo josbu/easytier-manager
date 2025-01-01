@@ -608,8 +608,9 @@ export default {
     multi_thread: '使用多线程',
     disable_p2p: '禁用P2P通信',
     disable_udp_hole_punching: '禁用UDP打洞',
-    enable_encryption: '是否启用加密',
+    enable_encryption: '启用加密',
     disable_encryption: '禁用加密',
+    enable_ipv6: '启用 IPv6',
     disable_ipv6: '禁用 IPv6',
     latency_first: '延迟优先模式',
     enable_exit_node: '启用退出节点',
@@ -684,6 +685,8 @@ export default {
     clearCache: '清除缓存',
     feedback: '问题及意见反馈',
     vpn_wireguard_listen: 'WireGuard监听地址',
-    vpn_client_cidr: 'WireGuard客户端CIDR'
+    vpn_client_cidr: 'WireGuard客户端CIDR',
+    quickAction: '快捷操作',
+    createServerConfig: '创建服务器配置'
   }
 }

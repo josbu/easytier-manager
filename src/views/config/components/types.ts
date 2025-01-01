@@ -25,8 +25,8 @@ interface Flags {
   default_protocol: string
   dev_name: string
   data_compress_algo: string
-  disable_encryption: boolean
-  disable_ipv6: boolean
+  enable_encryption: boolean
+  enable_ipv6: boolean
   latency_first: boolean
   enable_exit_node: boolean
   no_tun: boolean

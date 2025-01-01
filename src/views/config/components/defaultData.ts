@@ -25,8 +25,8 @@ const defaultFormData: FormData | any = {
   flags: {
     default_protocol: 'tcp',
     dev_name: '',
-    disable_encryption: false,
-    disable_ipv6: false,
+    enable_encryption: true,
+    enable_ipv6: true,
     latency_first: true,
     enable_exit_node: false,
     no_tun: false,
