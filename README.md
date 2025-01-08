@@ -1,7 +1,18 @@
 <div align="center">  <img width="100" src="./public/logo.png"> <br> <br>
 <h1>EasyTier 管理器 组网 内网穿透</h1>
-<h3>Vue3 + Vite5 + Electron33 + Element-Plus</h3>
+<h3>Vue3 + Vite5 + Tauri 2 + Element-Plus</h3>
 </div>
+
+> EasyTier 管理器 [Electron版本](https://github.com/xlc520/easytier-manager/tree/master) 大概不会再继续维护，但是仍可以继续使用
+
+## 软件说明
+
+简单来说，EasyTier 管理器是用来管理 EasyTier 内核的一个桌面应用，用于可视化的新增、修改、删除 EasyTier 的配置文件。
+
+- 支持界面化的一键启动、停止组网
+- 支持修改所有内核已有参数，所有新增、修改操作都支持界面化表单操作和文本编辑器操作
+- 支持界面化查看当前运行日志
+- 支持一键下载任意版本的内核 （ 请注意，旧版本很多参数特性不支持 ）
 
 ## 使用教程
 
@@ -51,7 +62,8 @@ https://developer.microsoft.com/en-us/microsoft-edge/webview2/?form=MA13LH#downl
 
 EasyTier 由 Rust 和 Tokio 驱动，一个简单、安全、去中心化的组网方案
 
-EasyTier 管理器 整合Vue3 + Vite5 + Electron33 + Element-Plus， 是一个基于 `element-plus` 免费开源的组网管理器。使用了最新的 `vue3`，`vite5`，`TypeScript` 等主流技术开发。
+EasyTier 管理器 整合Vue3 + Vite5 + Tauri 2 + Element-Plus， 是一个基于 `element-plus` 免费开源的组网管理器。使用了最新的
+`vue3`，`vite5`，`TypeScript` 等主流技术开发。
 
 ## 特性
 
@@ -61,7 +73,7 @@ EasyTier 管理器 整合Vue3 + Vite5 + Electron33 + Element-Plus， 是一个�
 - **可视化添加配置**：提供表单可视化添加组网配置，简单方便
 - **可视化日志查看**：首页可查看当前组网配置的日志
 - **一键下载安装**：一键下载安装内核，内置加速源，无需手动下载，下载完一键安装
-- **最新技术栈**：使用 Electron33/Vue3/vite5 等前端前沿技术开发
+- **最新技术栈**：使用 Tauri2/Vue3/vite5 等前端前沿技术开发
 - **TypeScript**: 应用程序级 JavaScript 的语言
 - **国际化**：内置完善的国际化方案
 
@@ -85,7 +97,8 @@ EasyTier 管理器 整合Vue3 + Vite5 + Electron33 + Element-Plus， 是一个�
 
 1.由于Windows 10 和 Windows 11 的权限问题，需要使用管理员权限运行，所以需要手动设置exe的权限，设置为以管理员身份运行
 
-2.由于Windows更新导致部分环境变量失效问题，例如无法使用`ping` `wmic` `netsh`等命令（可以在cmd输入直接测试），需要手动重新设置环境变量，由于修改的是系统环境变量，请搜索大量教程资料，再进行设置（一般是设置System32、SysWOW64目录）
+2.由于Windows更新导致部分环境变量失效问题，例如无法使用`ping` `wmic` `netsh`
+等命令（可以在cmd输入直接测试），需要手动重新设置环境变量，由于修改的是系统环境变量，请搜索大量教程资料，再进行设置（一般是设置System32、SysWOW64目录）
 
 3.由于Windows 10 和 Windows 11 的权限问题，需要使用管理员权限运行，所以需要手动设置exe的权限，设置为以管理员身份运行
 
@@ -94,7 +107,7 @@ EasyTier 管理器 整合Vue3 + Vite5 + Electron33 + Element-Plus， 是一个�
 ## 前序准备
 
 - [node](http://nodejs.org/) 和 [git](https://git-scm.com/) - 项目开发环境
-- [Vite4](https://vitejs.dev/) - 熟悉 vite 特性
+- [Vite5](https://vitejs.dev/) - 熟悉 vite 特性
 - [Vue3](https://v3.vuejs.org/) - 熟悉 Vue 基础语法
 - [TypeScript](https://www.typescriptlang.org/) - 熟悉 `TypeScript` 基本语法
 - [Es6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
@@ -122,7 +135,7 @@ pnpm install
 - 运行
 
 ```bash
-pnpm run dev
+pnpm run tauri
 ```
 
 - 打包
@@ -136,9 +149,7 @@ pnpm run dev
   2.打包各个平台
 
   ```bash
-  pnpm run build:win
-  pnpm run build:linux
-  pnpm run build:mac
+  pnpm run tauri:build
   ```
 
 ## 更新日志
@@ -179,4 +190,6 @@ pnpm run dev
 
 ## 许可证
 
-[MIT](./LICENSE)
+[许可证-英文](./LICENSE)
+
+[许可证-中文](./LICENSE.zh-cn.md)
