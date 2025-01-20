@@ -4,7 +4,7 @@ import { CodeEditor } from '@/components/CodeEditor'
 import { ContentWrap } from '@/components/ContentWrap'
 import { Descriptions, DescriptionsSchema } from '@/components/Descriptions'
 import { Dialog } from '@/components/Dialog'
-import { LOG_PATH } from '@/constants/easytier'
+import { CONFIG_PATH, LOG_PATH } from '@/constants/easytier'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useEasyTierStore } from '@/store/modules/easytier'
 import { useTrayStore } from '@/store/modules/trayStore'
@@ -21,6 +21,7 @@ import { attachConsole, error, info } from '@tauri-apps/plugin-log'
 import dayjs from 'dayjs'
 import { ElMessageBox, ElNotification, ElOption, ElSelect, ElTree } from 'element-plus'
 import { computed, onMounted, reactive, ref, unref, watch } from 'vue'
+import * as toml from 'smol-toml'
 
 const { t } = useI18n()
 const easyTierStore = useEasyTierStore()
@@ -196,7 +197,15 @@ const getPeerInfo = async () => {
     if (easyTierStore.stopLoop || retryTime > 5) {
       break
     }
-    const res = await runEasyTierCli(['peer'])
+    const temp = (await readFileContent(
+      CONFIG_PATH + '/' + currentNodeKey.value.configFileName + '.toml'
+    )) as string
+    const data = toml.parse(temp)
+    const res = await runEasyTierCli([
+      '-p',
+      (data.rpc_portal as String).replace('0.0.0.0', '127.0.0.1'),
+      'peer'
+    ])
     if (res === 403) {
       easyTierStore.setStopLoop(true)
       easyTierStore.removeRunningList(currentNodeKey.value.configFileName)
