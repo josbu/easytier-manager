@@ -345,7 +345,8 @@ export const checkServiceOnWindows = (serviceName: string): Promise<any> => {
       const args = ['status', serviceName]
       const res: any = await executeCmd(NSSM_NAME, args, { encoding: 'gbk' })
       // debug('检测服务:' + res)
-      if (res && res.code! === 3) {
+      // Can't open service!\r\r\nOpenService(): The specified service does not exist as an installed service.
+      if (res && (res.code! === 3 || res.includes('does not exist'))) {
         resolve(false)
       }
       resolve(res)

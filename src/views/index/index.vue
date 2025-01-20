@@ -19,9 +19,11 @@ import {
 import { notify, sleep } from '@/utils/sysUtil'
 import { attachConsole, error, info } from '@tauri-apps/plugin-log'
 import dayjs from 'dayjs'
-import { ElMessageBox, ElNotification, ElOption, ElSelect, ElTree } from 'element-plus'
+import { ElMessage, ElMessageBox, ElNotification, ElOption, ElSelect, ElTree } from 'element-plus'
 import { computed, onMounted, reactive, ref, unref, watch } from 'vue'
 import * as toml from 'smol-toml'
+import { useClipboard } from '@vueuse/core'
+import { CopyDocument } from '@element-plus/icons-vue'
 
 const { t } = useI18n()
 const easyTierStore = useEasyTierStore()
@@ -377,6 +379,21 @@ const checkCore = async () => {
     )
   }
 }
+const copyIp = async (data) => {
+  // 拷贝
+  const { copy, copied, isSupported } = useClipboard({
+    source: data,
+    legacy: true
+  })
+  if (!isSupported) {
+    ElMessage.error(t('setting.copyFailed'))
+  } else {
+    await copy()
+    if (unref(copied)) {
+      ElMessage.success(t('setting.copySuccess'))
+    }
+  }
+}
 onMounted(async () => {
   // 启用 TargetKind::Webview 后，这个函数将把日志打印到浏览器控制台
   await attachConsole()
@@ -463,14 +480,22 @@ onMounted(async () => {
         <el-table-column
           prop="ipv4"
           :label="t('easytier.ipv4Vir')"
-          width="105"
+          width="125"
           show-overflow-tooltip
         >
-          <!--  <template #default="{ row }">
-            <span>{{ ipFormat(row.ipv4_addr) }}</span>
-          </template> -->
+          <template #default="{ row }">
+            <span>{{ row.ipv4 }}&nbsp;</span>
+            <el-icon v-if="row.ipv4" @click.stop="copyIp(row.ipv4)" size="14">
+              <CopyDocument />
+            </el-icon>
+          </template>
         </el-table-column>
-        <el-table-column prop="hostname" :label="t('easytier.hostname')" show-overflow-tooltip />
+        <el-table-column
+          prop="hostname"
+          :label="t('easytier.hostname')"
+          min-width="90"
+          show-overflow-tooltip
+        />
         <el-table-column prop="cost" :label="t('easytier.cost')" show-overflow-tooltip>
           <!-- <template #default="{ row }">
             <span>{{ routeCost(row.cost) }}</span>

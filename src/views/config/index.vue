@@ -108,6 +108,11 @@ const editForm = async (row: any) => {
   await readFileData(row.fileName)
   const parse = Object.assign({}, formData.value, toml.parse(dataConfig.value))
   formData.value = parse as FormData
+  if (!formData.value.vpn_portal_config) {
+    formData.value.vpn_portal_config = {}
+    formData.value.vpn_portal_config.client_cidr = ''
+    formData.value.vpn_portal_config.wireguard_listen = ''
+  }
   configFileName.value = row?.configFileName
   dialogVisible.value = true
 }
@@ -182,8 +187,8 @@ const addConfigAction = async () => {
         formData.value.console_logger = undefined
       }
       if (
-        formData.value.vpn_portal_config.client_cidr === '' ||
-        formData.value.vpn_portal_config.wireguard_listen === ''
+        formData.value.vpn_portal_config?.client_cidr === '' ||
+        formData.value.vpn_portal_config?.wireguard_listen === ''
       ) {
         formData.value.vpn_portal_config = undefined
       }
@@ -277,6 +282,7 @@ const saveConfigAction = async () => {
         if (!formData.value.console_logger || formData.value.console_logger?.level === undefined) {
           formData.value.console_logger = undefined
         }
+        console.log('formData.value', formData.value)
         if (
           formData.value.vpn_portal_config.client_cidr === '' ||
           formData.value.vpn_portal_config.wireguard_listen === ''

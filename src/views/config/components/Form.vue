@@ -170,9 +170,11 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.rpc_portal')" prop="rpc_portal">
-            <el-input v-model="formData.rpc_portal" type="text" clearable />
-          </el-form-item>
+          <el-tooltip content="使用不同的 RPC 端口，可以在首页实时查看节点信息" placement="top">
+            <el-form-item :label="t('easytier.rpc_portal')" prop="rpc_portal">
+              <el-input v-model="formData.rpc_portal" type="text" clearable />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
         <el-col :span="12" v-if="consoleLoggerVisible">
           <el-form-item :label="t('easytier.console_log_level')" prop="console_logger.level">
@@ -412,9 +414,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
+import { onBeforeMount, PropType, reactive, ref, toRefs, watch } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
-import { getLogsDir } from '@/utils/fileUtil'
 import { getHostname } from '@/utils/sysUtil'
 import { useEasyTierStore } from '@/store/modules/easytier'
 
@@ -475,24 +476,12 @@ const rules = reactive({
 })
 const peersOptions = ref([
   {
-    name: 'tcp://public.easytier.top:11010',
+    name: '官方服务器',
     description: 'tcp://public.easytier.top:11010'
   },
   {
-    name: 'tcp://c.oee.icu:60006',
+    name: '群友提供',
     description: 'tcp://c.oee.icu:60006'
-  },
-  {
-    name: 'tcp://ah.nkbpal.cn:11010',
-    description: 'tcp://ah.nkbpal.cn:11010'
-  },
-  {
-    name: 'tcp://et.ie12vps.xyz:11010',
-    description: 'tcp://et.ie12vps.xyz:11010'
-  },
-  {
-    name: 'tcp://gz.minebg.top:11010',
-    description: 'tcp://gz.minebg.top:11010'
   }
 ])
 const listenersOptions = reactive([
@@ -529,6 +518,14 @@ const proxy_network_cidrOptions = reactive([
   {
     value: '192.168.2.0/24',
     label: '192.168.2.0/24'
+  },
+  {
+    value: '192.168.5.0/24',
+    label: '192.168.5.0/24'
+  },
+  {
+    value: '192.168.6.0/24',
+    label: '192.168.6.0/24'
   },
   {
     label: '192.168.31.0/24',
@@ -624,8 +621,7 @@ watch(
     }
   }
 )
-
-onMounted(async () => {
+onBeforeMount(async () => {
   if (formData.value.dhcp) {
     ipv4Disabled.value = true
   }
@@ -642,8 +638,8 @@ onMounted(async () => {
   if (!formData.value.hostname || formData.value.hostname === '') {
     formData.value.hostname = await getHostname()
   }
-  if (!formData.value.file_logger.dir || formData.value.file_logger.dir === '') {
-    formData.value.file_logger.dir = await getLogsDir()
+  if (!formData.value.file_logger.file || formData.value.file_logger.file === '') {
+    formData.value.file_logger.file = 'easytier'
   }
   if (
     !formData.value.vpn_portal_config.client_cidr ||

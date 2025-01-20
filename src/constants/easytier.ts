@@ -33,16 +33,8 @@ export const GITHUB_MIRROR_URL = [
     label: 'https://ghproxy.cn/'
   },
   {
-    value: 'https://ghgo.xyz/',
-    label: 'https://ghgo.xyz/'
-  },
-  {
     value: 'https://ghproxy.net/',
     label: 'https://ghproxy.net/'
-  },
-  {
-    value: 'https://gh.ddlc.top/',
-    label: 'https://gh.ddlc.top/'
   },
   {
     value: 'https://ghproxy.cc/',
