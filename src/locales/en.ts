@@ -689,6 +689,10 @@ export default {
     clearCache: 'Clear cache',
     feedback: 'Feedback',
     quickAction: 'Quick action',
-    createServerConfig: 'Create server config'
+    createServerConfig: 'Create server config',
+    mapped_listeners: 'Mapped listeners',
+    disable_kcp_input: 'Disable KCP input',
+    enable_kcp_proxy: 'Enable KCP proxy',
+    bind_device: 'Bind device'
   }
 }

@@ -9,6 +9,7 @@ const defaultFormData: FormData | any = {
   ipv4: undefined,
   peer: [{ uri: undefined }],
   listeners: [],
+  mapped_listeners: [],
   proxy_network: [{ cidr: undefined }],
   exit_nodes: [],
   rpc_portal: '0.0.0.0:15888',
@@ -39,7 +40,10 @@ const defaultFormData: FormData | any = {
     ipv6_listener: undefined,
     socks5: undefined,
     relay_network_whitelist: '*',
-    compression_algorithm: undefined
+    compression_algorithm: undefined,
+    bind_device: true,
+    disable_kcp_input: false,
+    enable_kcp_proxy: false
   }
 }
 export default { defaultFormData }

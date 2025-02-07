@@ -62,8 +62,7 @@ https://developer.microsoft.com/en-us/microsoft-edge/webview2/?form=MA13LH#downl
 
 EasyTier 由 Rust 和 Tokio 驱动，一个简单、安全、去中心化的组网方案
 
-EasyTier 管理器 整合Vue3 + Vite5 + Tauri 2 + Element-Plus， 是一个基于 `element-plus` 免费开源的组网管理器。使用了最新的
-`vue3`，`vite5`，`TypeScript` 等主流技术开发。
+EasyTier 管理器 整合Vue3 + Vite5 + Tauri 2 + Element-Plus， 是一个基于 `element-plus` 免费开源的组网管理器。使用了最新的 `vue3`，`vite5`，`TypeScript` 等主流技术开发。
 
 ## 特性
 
@@ -97,8 +96,7 @@ EasyTier 管理器 整合Vue3 + Vite5 + Tauri 2 + Element-Plus， 是一个基�
 
 1.由于Windows 10 和 Windows 11 的权限问题，需要使用管理员权限运行，所以需要手动设置exe的权限，设置为以管理员身份运行
 
-2.由于Windows更新导致部分环境变量失效问题，例如无法使用`ping` `wmic` `netsh`
-等命令（可以在cmd输入直接测试），需要手动重新设置环境变量，由于修改的是系统环境变量，请搜索大量教程资料，再进行设置（一般是设置System32、SysWOW64目录）
+2.由于Windows更新导致部分环境变量失效问题，例如无法使用`ping` `wmic` `netsh` 等命令（可以在cmd输入直接测试），需要手动重新设置环境变量，由于修改的是系统环境变量，请搜索大量教程资料，再进行设置（一般是设置System32、SysWOW64目录）
 
 3.由于Windows 10 和 Windows 11 的权限问题，需要使用管理员权限运行，所以需要手动设置exe的权限，设置为以管理员身份运行
 
@@ -186,7 +184,7 @@ pnpm run tauri
 
 ## 系统支持
 
-理论支持Windows 11 、Windows 10 、 Windows 7 、 Linux (桌面版)、MacOS(暂时无证书，无法打包测试)
+理论支持Windows 11 、Windows 10 、 ~~Windows 7~~ 、 ~~Linux (桌面版)~~、~~MacOS(暂时无证书，无法打包测试)~~
 
 ## 许可证
 

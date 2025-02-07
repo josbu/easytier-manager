@@ -282,7 +282,6 @@ const saveConfigAction = async () => {
         if (!formData.value.console_logger || formData.value.console_logger?.level === undefined) {
           formData.value.console_logger = undefined
         }
-        console.log('formData.value', formData.value)
         if (
           formData.value.vpn_portal_config.client_cidr === '' ||
           formData.value.vpn_portal_config.wireguard_listen === ''

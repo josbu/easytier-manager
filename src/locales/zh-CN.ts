@@ -687,6 +687,10 @@ export default {
     vpn_wireguard_listen: 'WireGuard监听地址',
     vpn_client_cidr: 'WireGuard客户端CIDR',
     quickAction: '快捷操作',
-    createServerConfig: '创建服务器配置'
+    createServerConfig: '创建服务器配置',
+    mapped_listeners: '映射监听器',
+    disable_kcp_input: '禁用KCP输入',
+    enable_kcp_proxy: '启用KCP代理',
+    bind_device: '仅使用物理网卡'
   }
 }

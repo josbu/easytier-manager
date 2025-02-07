@@ -39,6 +39,9 @@ interface Flags {
   ipv6_listener: string
   socks5?: string | undefined
   relay_network_whitelist?: string | undefined
+  bind_device: boolean
+  disable_kcp_input: boolean
+  enable_kcp_proxy: boolean
 }
 
 interface FormData {
@@ -49,6 +52,7 @@ interface FormData {
   ipv4?: string | undefined
   peer: Partial<Peer>[] | undefined | null
   listeners: any[]
+  mapped_listeners: any[]
   proxy_network: Partial<ProxyNetwork>[] | undefined | null
   exit_nodes: any[] | undefined
   rpc_portal: string

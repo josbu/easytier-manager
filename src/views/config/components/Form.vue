@@ -122,6 +122,32 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :md="24" :sm="12" :xs="12">
+          <el-tooltip
+            content="手动指定监听器的公网地址，其他节点可以使用该地址连接到本节点。例如：tcp://123.123.123.123:11223，可以指定多个"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.mapped_listeners')" prop="mapped_listeners">
+              <el-select
+                v-model="formData.mapped_listeners"
+                clearable
+                filterable
+                allow-create
+                default-first-option
+                multiple
+              >
+                <el-option
+                  v-for="(item, index) in mappedListenersOptions"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="24">
           <el-tooltip content="支持手动输入" placement="top">
             <el-form-item :label="t('easytier.proxy_network')" prop="proxy_network.cidr">
@@ -241,17 +267,44 @@
       <el-divider direction="horizontal">其他标志设置</el-divider>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.default_protocol')" prop="flags.default_protocol">
-            <el-radio-group v-model="formData.flags.default_protocol">
-              <el-radio
-                v-for="(item, index) in flags_default_protocolOptions"
-                :key="index"
-                :value="item.value"
-                style="display: inline"
-                >{{ item.label }}
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
+          <el-tooltip content="连接到对等节点时使用的默认协议" placement="top">
+            <el-form-item :label="t('easytier.default_protocol')" prop="flags.default_protocol">
+              <el-radio-group v-model="formData.flags.default_protocol">
+                <el-radio
+                  v-for="(item, index) in flags_default_protocolOptions"
+                  :key="index"
+                  :value="item.value"
+                  style="display: inline"
+                  >{{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+        <el-col :span="12">
+          <el-tooltip
+            content="延迟优先模式，将尝试使用最低延迟路径转发流量，关闭则使用最短路径"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.latency_first')" prop="flags.latency_first">
+              <el-switch v-model="formData.flags.latency_first" />
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+      </el-row>
+      <el-row :span="24">
+        <el-col :span="12">
+          <el-tooltip content="TUN接口名称，为空则随机生成" placement="top">
+            <el-form-item :label="t('easytier.dev_name')" prop="flags.dev_name">
+              <el-input
+                v-model="formData.flags.dev_name"
+                type="text"
+                maxlength="24"
+                show-word-limit
+                clearable
+              />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
         <el-col :span="12">
           <el-form-item
@@ -269,17 +322,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :span="24">
-        <el-form-item :label="t('easytier.dev_name')" prop="flags.dev_name">
-          <el-input
-            v-model="formData.flags.dev_name"
-            type="text"
-            maxlength="24"
-            show-word-limit
-            clearable
-          />
-        </el-form-item>
-      </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item :label="t('easytier.enable_encryption')" prop="flags.enable_encryption">
@@ -294,14 +336,38 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item :label="t('easytier.latency_first')" prop="flags.latency_first">
-            <el-switch v-model="formData.flags.latency_first" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item :label="t('easytier.multi_thread')" prop="flags.multi_thread">
             <el-switch v-model="formData.flags.multi_thread" />
           </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-tooltip
+            content="将连接器的套接字绑定到物理设备以避免路由问题。比如子网代理网段与某节点的网段冲突，绑定物理设备后可以与该节点正常通信"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.bind_device')" prop="flags.bind_device">
+              <el-switch v-model="formData.flags.bind_device" />
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-tooltip content="启用KCP代理，提高在 UDP 丢包网络上的延迟和吞吐量" placement="top">
+            <el-form-item :label="t('easytier.enable_kcp_proxy')" prop="flags.enable_kcp_proxy">
+              <el-switch v-model="formData.flags.enable_kcp_proxy" />
+            </el-form-item>
+          </el-tooltip>
+        </el-col>
+        <el-col :span="12">
+          <el-tooltip
+            content="不允许其他节点使用 KCP 代理 TCP 流到此节点。开启 KCP 代理的节点访问此节点时，依然使用原始 TCP 连接"
+            placement="top"
+          >
+            <el-form-item :label="t('easytier.disable_kcp_input')" prop="flags.disable_kcp_input">
+              <el-switch v-model="formData.flags.disable_kcp_input" />
+            </el-form-item>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
@@ -506,6 +572,13 @@ const listenersOptions = reactive([
     label: 'wss://0.0.0.0:11012'
   }
 ])
+const mappedListenersOptions = reactive([
+  {
+    label: '例如：tcp://123.123.123.123:11223',
+    value: 'tcp://123.123.123.123:11223'
+  }
+])
+
 const proxy_network_cidrOptions = reactive([
   {
     label: '192.168.0.0/24',

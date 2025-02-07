@@ -220,6 +220,13 @@ export async function killProcess(pid: number, force: boolean = true): Promise<b
     return false
   }
 }
+// 停止所有节点
+export async function stopAllNodes() {
+  const processList = await getRunningProcesses('easytier-core')
+  processList.forEach(async (process) => {
+    await killProcess(process.pid)
+  })
+}
 
 // Linux/macOS 下使用 sudo 的示例
 export async function killProcessWithSudo(pid: number, force: boolean = false): Promise<boolean> {

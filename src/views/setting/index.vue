@@ -17,7 +17,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { useStorage } from '@/hooks/web/useStorage'
 import { useEasyTierStore } from '@/store/modules/easytier'
 import { downloadFile, extractFile, getLogsDir, getResourceDir, openPath } from '@/utils/fileUtil'
-import { runEasyTierCli } from '@/utils/shellUtil'
+import { runEasyTierCli, stopAllNodes } from '@/utils/shellUtil'
 import { getAppVersion, getArch, getOsType } from '@/utils/sysUtil'
 import { appDataDir, appLogDir, join, resourceDir } from '@tauri-apps/api/path'
 import { fetch } from '@tauri-apps/plugin-http'
@@ -104,8 +104,16 @@ const downLoadCore = async () => {
   }
 }
 const installCore = async () => {
-  const zipPath = await join(RESOURCE_PATH, fileName.value.replace('/', ''))
-  await extractFile(zipPath, RESOURCE_PATH)
+  ElMessageBox.confirm('安装将会停止所有正在运行的节点，请确认是否继续', t('common.delWarning'), {
+    confirmButtonText: '继续安装',
+    cancelButtonText: t('common.delCancel'),
+    type: 'warning'
+  }).then(async () => {
+    // 停止所有节点
+    await stopAllNodes()
+    const zipPath = await join(RESOURCE_PATH, fileName.value.replace('/', ''))
+    await extractFile(zipPath, RESOURCE_PATH)
+  })
 }
 const verSelectChange = (val: string) => {
   const winUrlTemplate = template(EASYTIER_NAME)
